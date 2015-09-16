@@ -1,2 +1,1 @@
-go nuts 
-okay thx
+Mirror of a Home Automation System build for the Arduino platform
