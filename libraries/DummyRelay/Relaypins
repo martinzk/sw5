@@ -1,0 +1,48 @@
+
+
+Dummy arduino
+	Til højre
+		r8 = 48	leds:	49
+		r7 = 46	leds:	35, 47
+		r6 = 44	leds:	45
+		r5 = 42	leds:	50, 39
+		r4 = 40	leds:	43
+		r3 = 38	leds:	41
+		r2 = 36	leds:	37
+		r1 = 34	leds:	33
+
+	Til venstre
+		r1 = 13	leds:	31	
+		r2 = 12	leds:	29
+		r3 = 11	leds:	27
+		r4 = 10	leds:	25
+		r5 = 9	leds:	23
+		r6 = 8	leds:	52
+		r7 = 7	leds:	53
+		r8 = 6	leds:	51
+
+
+
+Rigtige arduino
+	Til højre
+		r1 = 15
+		r2 = 38
+		r2 = 40
+		r3 = 42
+		r4 = 44
+		r5 = 46
+		r6 = 48
+		r7 = 14
+		
+	til venstre
+		r1 = 34
+		r2 = 36
+		r3 = 32
+		r4 = 30
+		r5 = 28
+		r6 = 26
+		r7 = 24
+		r8 = 22
+
+
+

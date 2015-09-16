@@ -1,0 +1,110 @@
+#include <Led.h>
+#include <Relay.h>
+#include <RelayManager.h>
+
+RelayManager relayManager;
+
+LED led1(53);  // KNAP I
+LED led2(51);  // KNAP B
+LED led3(49);  // KNAP C
+LED led4(47);  // KNAP D
+LED led5(45);  // KNAP E
+LED led6(43);  // KNAP A
+LED led7(41);  // KNAP B
+LED led8(39);  // KNAP F
+LED led9(37);  // KNAP G
+LED led10(35); // KNAP H
+LED led11(33); // KNAP J
+LED led12(31); // KNAP I
+LED led13(29); // KNAP I
+LED led14(27); // KNAP L
+LED led15(25); // KNAP O
+LED led16(5);  // KNAP P
+LED led17(3);  // KNAP M
+LED led18(4);  // KNAP N
+
+Relay relay1(52); // KNAP P
+Relay relay2(50); // KNAP O
+Relay relay3(48); // KNAP N 
+Relay relay4(46); // KNAP M
+Relay relay5(42); // KNAP K //HAR INGEN LED TILSLUTTET
+Relay relay6(44); // KNAP L
+Relay relay7(40); // KNAP J
+Relay relay8(38); // KNAP I
+Relay relay9(36); // KNAP H
+Relay relay10(34); // KNAP G
+Relay relay11(32); // KNAP F
+Relay relay12(30); // KNAP E
+Relay relay13(28); // KNAP D
+Relay relay14(26); // KNAP C
+Relay relay15(24); // KNAP B
+Relay relay16(22); // KNAP A
+
+void setup()
+{
+  relay1.AddLED(led13);
+  //relay1.AddLED(led12);
+  //relay1.AddLED(led13);
+  
+  
+  relay2.AddLED(led11);
+  
+  relay3.AddLED(led18);
+  
+  relay4.AddLED(led14);
+  
+  relay5.AddLED(led17);
+  
+  relay6.AddLED(led18);
+  
+  relay7.AddLED(led15);
+  
+  relay8.AddLED(led16);
+  
+  relay9.AddLED(led6);
+  
+  relay10.AddLED(led7);
+  relay10.AddLED(led2);
+  
+  relay11.AddLED(led3);
+  
+  relay12.AddLED(led4);
+  
+  relay13.AddLED(led5);
+  
+  relay14.AddLED(led8);
+  
+  relay15.AddLED(led9);
+  
+  relay16.AddLED(led10);
+  
+  relayManager.Add(relay1);
+  relayManager.Add(relay2);
+  relayManager.Add(relay3);
+  relayManager.Add(relay4);
+  relayManager.Add(relay5);
+  relayManager.Add(relay6);
+  relayManager.Add(relay7);
+  relayManager.Add(relay8);
+  relayManager.Add(relay9);
+  relayManager.Add(relay10);
+  relayManager.Add(relay11);
+  relayManager.Add(relay12);
+  relayManager.Add(relay13);
+  relayManager.Add(relay14);
+  relayManager.Add(relay15);
+  relayManager.Add(relay16);
+}
+// 16 = N
+//15=O
+// 17 = P Er Løs
+//18 = M
+//P = relay8
+//O = re7
+//N = re5
+void loop()
+{
+
+ relayManager.Run();
+// relay3.Read();
+}

@@ -1,0 +1,160 @@
+
+#include "Relay.h"
+#include "RelayManager.h"
+#include "IEventComponent.h"
+#include "IState.h"
+#include "Button.h"
+#include "ButtonManager.h"
+#include "Configurations.h"
+#include "Event.h"
+#include "TinyPacks.h"
+#include "utility/FatStructs.h"
+#include "utility/Sd2Card.h"
+#include "utility/Sd2PinMap.h"
+#include "utility/SdFat.h"
+#include "utility/SdFatUtil.h"
+#include "utility/SdFatmainpage.h"
+#include "utility/SdInfo.h"
+#include "SD.h"
+
+
+
+
+
+
+
+PackWriter writer;
+PackReader reader;
+
+#define MAX_PACKED_DATA 512
+#define MAX_NAME_CHARS 32
+#define MAX_TEXT_LENGTH 32
+
+unsigned char packed_data[MAX_PACKED_DATA];
+int packed_data_length;
+File tpFile;
+
+void setup()
+{
+  // Open serial communications and wait for port to open:
+  Serial.begin(9600);
+   while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo only
+  }
+
+  Serial.print("Initializing SD card...");
+  // On the Ethernet Shield, CS is pin 4. It's set as an output by default.
+  // Note that even if it's not used as the CS pin, the hardware SS pin 
+  // (10 on most Arduino boards, 53 on the Mega) must be left as an output 
+  // or the SD library functions will not work. 
+   pinMode(10, OUTPUT);
+   
+  if (!SD.begin(4)) {
+    Serial.println("initialization failed!");
+    return;
+  }
+  Serial.println("initialization done.");
+  
+  // open the file. note that only one file can be open at a time,
+  // so you have to close this one before opening another.
+  tpFile = SD.open("test.txt", FILE_READ);
+  
+  if (tpFile) {
+    // read from the file until there's nothing else in it:
+    int i = 0;
+    while (tpFile.available()) {
+      unsigned char c = tpFile.read();
+      packed_data[i] = c;
+        i++;
+        Serial.print(c);
+    }
+    // close the file:
+    tpFile.close();
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening test.txt");
+  }
+}
+
+void loop()
+{
+  char text[MAX_TEXT_LENGTH] = "";
+  bool status = false;
+  int  count = 0;  
+
+  // Unpack
+  deserializeButton(packed_data);
+
+
+  delay(5000);  
+}
+
+void deserializeButton(unsigned char* data)
+{
+        int dataLength = 512;
+ 
+        reader.setBuffer(data, dataLength);
+ 
+        char buttonName[MAX_NAME_CHARS];
+        uint8_t inPin = 0;
+        uint8_t relays[16];
+        uint8_t index = 0;
+       
+        while(true)
+        {
+                reader.next();
+                if(reader.openMap())
+                {
+                         while(reader.next())
+                         {
+                                 if(reader.match("buttonName"))
+                                 {
+                                         reader.getString(buttonName, MAX_NAME_CHARS);
+                                 }
+                        //         else if(reader.match("inputPin"))
+                        //         {
+                        //                 inPin = reader.getInteger();
+                        //         }
+                        //         // else if(reader.match("relays"))
+                        //         // {
+                        //         //         reader.openList();
+                        //         //         while(reader.openMap())
+                        //         //         {
+                        //         //                 if(reader.match("outputPin"))
+                        //         //                 {
+                        //         //                         relays[index] = reader.getInteger();
+                        //         //                         index++;
+                        //         //                 }
+                        //         //                 else
+                        //         //                 {
+                        //         //                         reader.next();
+                        //         //                 }
+                        //         //         }      
+                        //         // }
+                                else
+                                {
+                                        reader.next();
+                                }
+                         }
+                }
+                else
+                {
+                        reader.close();
+                        break;
+                }
+        }
+        // Button b(inPin, buttonName);
+ 
+        // for (int i = 0; i < index; ++i)
+        // {
+        //   b.AddRelay(relays[i]);
+        // }
+    
+        Serial.println(buttonName);
+
+ 
+        // Serial.println(b.GetNamePointer());
+        // Serial.println(b.inPin);
+ 
+}
+

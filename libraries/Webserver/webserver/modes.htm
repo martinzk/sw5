@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+    
+    <style type="text/css">
+    @media (min-width: 768px) {
+        .navbar .navbar-nav {
+            display: inline-block;
+            float: none;
+            vertical-align: top;
+        }
+
+        .navbar .navbar-collapse {
+            text-align: center;
+        }
+    }
+        .vertical-space {
+            margin-top: 8px;
+        }
+    </style>
+
+    <title>Modes</title>
+</head>
+
+<body>
+<input id="upload" style="display:none;" type="file"/>
+    <div class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Components <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="alarms.htm">Alarms</a></li>
+                                <li><a href="relays.htm">Relays</a></li>
+                                <li><a href="buttons.htm">Buttons</a></li>
+                                <li><a href="motion.htm">Motion sensors</a></li>
+                                <li><a href="sound.htm">Sound sensors</a></li>
+                                <li class="active"><a href="modes.htm">Modes</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="configure.htm">Configure</a></li>
+                        <li><a href="manage.htm">Manage</a></li>
+                        <li><a href="rules.htm">Rules</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Configurations<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" id="loadFromLocalFile">Load From Local File</a></li>
+                                <li><a href="#" id="saveConfigurations">Save Config Locally</a></li>
+                                <li><a href="#" id="uploadConfigurations">Upload Config To CU</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
+        <div class="jumbotron">
+            <h2 class="text-center">Modes</h2>
+
+            <span>Name: </span>
+            <input class="form-control" id="nameInput" type="text" maxlength="18" data-bind='value:modeNameToAdd, valueUpdate: "afterkeydown"'>
+
+            <div class="text-center vertical-space">
+                <button type="submit" data-bind="click: addItem, enable: modeNameToAdd().length > 0">Add Mode</button>
+            </div>
+        </div>
+
+        <div data-bind="template: { name: 'modesTemplate', foreach: modes }"></div>
+
+        <script id='modesTemplate' type="text/html">
+            <div class="jumbotron">
+                <div class="btn btn-danger pull-right" data-bind="click: $root.removeItem">X</div>
+                <h2 class="text-center">Mode</h2>
+                <span>Name: </span>
+                <input class="form-control" type="text" data-bind="value: mn">
+            </div>
+        </script>
+    </div>
+
+    
+
+    <!-- /container -->
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+<script type="text/javascript">
+
+    function viewModel() {
+        self = this;
+        this.modes = ko.observableArray([]);
+        this.modeNameToAdd = ko.observable("");
+        this.rules = ko.observableArray([]);
+
+        this.addItem = function () {
+            if (this.modeNameToAdd() != "")
+            { 
+                this.modes.push(new mode(this.modeNameToAdd(), getId()));
+                saveChanges();
+            } 
+            this.modeNameToAdd(""); // Clear the text boxes
+        };
+
+        this.removeItem = function (mode) {
+        	var rules = self.rules();
+            if (rules != null) {
+                for (var i = 0; i < rules.length; i++) {
+                    if (getObjectFromId(rules[i].c, mode.id) || getObjectFromId(rules[i].a, mode.id))
+                    {
+                        alert("The Mode is used in a rule.");
+                        return;
+                    }
+                };
+                
+                self.modes.remove(mode);
+                //decreaseId();
+
+                saveChanges();
+                return;
+            }
+
+            self.modes.remove(mode);
+            //decreaseId();
+
+            saveChanges();
+        };
+    };
+
+    ko.applyBindings(new viewModel());
+
+    function saveChanges() {
+        saveJson(modesStorageName, self.modes);
+    };
+  
+    function handleFileSelect(evt) {
+       // Create a reader object
+        var reader = new FileReader();
+        if (evt.target.files.length) {
+            var textFile = evt.target.files[0];
+            // Read the file
+            reader.readAsText(textFile);
+            // When it's loaded, process it
+            $(reader).on('load', processFile);
+        } else {
+            alert('Please upload a file before continuing')
+        } 
+    };
+
+    function processFile(e)
+    {
+        var json = e.target.result;
+        console.log(JSON.parse(json));
+    };
+
+    document.getElementById('upload').addEventListener('change', handleFileSelect, false);
+</script>
+</html>
+
+
+
+
+

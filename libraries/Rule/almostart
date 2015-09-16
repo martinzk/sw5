@@ -1,0 +1,25 @@
+For all d
+	if (t.w < [i].w)
+		if(t.w + t.d < [i].w)
+			update head to t
+			point t to [i]
+		else if(t.w + t.d > [i].w):
+			update head to t
+			while(still overlapping):
+				if([i].w + i.d < t.w + t.d) 
+					point t to [i+1]
+				else
+					point t to i;
+					break;
+				i++;
+			//endwhile
+			//skal i updeles;
+			if([i].w < t.w + t.d):
+				i.w = t.w + t.d;
+	else:
+		[i].m = t.m
+
+if(t.m == t+1.m)
+	t.d = [t+1].d
+	point t to t+2
+

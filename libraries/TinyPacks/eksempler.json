@@ -1,0 +1,1 @@
+[{"event":{"buttonName":"2","inputPin":2,"eventType":"Single"},"conditions":[{"name":"test","state":1}],"actions":[{"name":"test","state":1}]},{"event":{"buttonName":"2","inputPin":2,"eventType":"Long"},"conditions":[{"name":"test","state":0}],"actions":[{"name":"test","state":0}]}]

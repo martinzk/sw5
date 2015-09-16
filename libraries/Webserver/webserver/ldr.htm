@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">    
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <title>Light sensors</title>
+</head>  
+<style type="text/css">
+.horizontal-line
+{
+    position: relative;
+    border-top: 1px solid #dfdfdf;
+    padding-top: 20px;
+    margin-top:20px;
+}
+
+.vertical-space
+{
+  margin-top: 8px;
+}
+
+.configure {
+  background-color: rgba(0, 120, 0, 0.2); 
+}
+</style>
+
+<body>
+<input id="upload" style="display:none;" type="file"/>
+  <div class="container"> 
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="relays.htm">Duino House</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="alarms.htm">Alarms</a></li>
+            <li><a href="relays.htm">Relays</a></li>
+            <li><a href="buttons.htm">Buttons</a></li>
+            <li><a href="motion.htm">Motion sensors</a></li>
+            <li class="active"><a href="ldr.htm">Light sensors</a></li>
+            <li><a href="sound.htm">Sound sensors</a></li>
+            <li><a href="modes.htm">Modes</a></li>
+            <li><a href="configure.htm">Configure</a></li>
+                        <li><a href="manage.htm">Manage</a></li>
+
+            <li><a href="rules.htm">Rules</a></li>
+            <li><a href="#" id="saveConfigurations">Save Config</a></li>
+            <li class="configure"><a href="#" id="uploadConfigurations">Upload config</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <div class="jumbotron">
+    <h2 class="text-center">Light sensors</h2>
+
+    </div> <!-- /jumbotron  -->
+
+  </div> <!-- /container -->
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+function viewModel() {
+    self = this;
+};
+
+function relay(name, inputPin, owner) // Constructor
+{
+    this.name = ko.observable(name);
+    this.outputPin = ko.observable(inputPin);
+    this.owner = owner;
+}
+
+ko.applyBindings(new viewModel());
+
+buttonsStorageName = "";
+relaysStorageName = "";
+
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+};
+
+function createCookie(name,value,days) {
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  else var expires = "";
+  document.cookie = name+"="+value+expires+"; path=/";
+};
+
+function saveJson(name, object) {
+  var json_text = ko.toJSON(object);
+  localStorage.setItem(name, json_text);
+}
+
+function deserializeJson(name) {
+  var retrievedData = localStorage.getItem(name);
+
+  if (retrievedData)
+  {
+    return JSON.parse(retrievedData);
+  }
+};
+
+function readStorage(name) {
+  var retrievedData = localStorage.getItem(name);
+
+  if (retrievedData)
+  {
+    return retrievedData;
+  }
+};
+
+function saveChanges() {
+  saveJson(buttonsStorageName, self.buttons);
+};
+
+$(document).ready(function() {
+  var user = readCookie("login");
+
+  if (user == null) 
+  {
+    window.location.href = "relays.htm";
+    return;
+  }
+
+  relaysStorageName = user + "_" + "relays";
+}); 
+
+$(function() {
+  $("#uploadConfigurations").on("click", function(e) {
+    e.preventDefault(); // cancel the link itself
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "buttons.htm", true);
+    xmlhttp.send(readStorage(buttonsStorageName));
+  });
+});
+
+$(function() {
+  $("#saveConfigurations").on("click", function(e) {
+    e.preventDefault(); // cancel the link itself
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(readStorage(buttonsStorageName)));
+    pom.setAttribute('download', "configurations.json");
+    pom.click();
+  });
+});
+
+
+</script>   
+</html>
+
+
+
+
+

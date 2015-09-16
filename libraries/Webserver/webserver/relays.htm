@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <style type="text/css">
+    @media (min-width: 768px) {
+        .navbar .navbar-nav {
+            display: inline-block;
+            float: none;
+            vertical-align: top;
+        }
+
+        .navbar .navbar-collapse {
+            text-align: center;
+        }
+    }
+    @media (min-width: 768px) {
+        .navbar .navbar-nav {
+            display: inline-block;
+            float: none;
+            vertical-align: top;
+        }
+
+        .navbar .navbar-collapse {
+            text-align: center;
+        }
+    }
+
+    .vertical-space {
+        margin-top: 8px;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        background-color: rgba(0,0,0,0.3); /*dim the background*/
+    }
+
+    /* Extra markup and styles for table-esque vertical and horizontal centering */
+    .site-wrapper {
+        display: table;
+        width: 100%;
+        height: 100%; /* For at least Firefox */
+        min-height: 100%;
+    }
+
+    .site-wrapper-inner {
+        display: table-cell;
+        vertical-align: top;
+    }
+
+    @media (min-width: 768px) {
+
+        /* Start the vertical centering */
+        .site-wrapper-inner {
+            vertical-align: middle;
+        }
+        /* Handle the widths */
+        .masthead,
+        .mastfoot,
+        .cover-container {
+            width: 100%; /* Must be percentage or pixels for horizontal alignment */
+        }
+    }
+
+    .account-box {
+        border: 2px solid rgba(153, 153, 153, 0.75);
+        border-radius: 2px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        -khtml-border-radius: 2px;
+        -o-border-radius: 2px;
+        z-index: 3;
+        font-size: 13px !important;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        background-color: #ffffff;
+        padding: 20px;
+    }
+
+    .purple-bg {
+        background-color: #6E329D;
+        color: #fff;
+    }
+</style>
+
+
+    <title>Relays</title>
+</head>
+
+<body>
+<input id="upload" style="display:none;" type="file"/>
+
+    <script type="text/template" id="loginHtml">
+
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="account-box">
+                    <form class="form-signin">
+                        <div class="form-group">
+                            <input id="usernameInput" type="text" class="form-control" placeholder="Username" required autofocus />
+                        </div>
+                        <div class="form-group">
+                            <input id="passwordInput" type="password" class="form-control" placeholder="Password" required />
+                        </div>
+                        <div class="btn btn-lg btn-block purple-bg" onclick="login()">
+                        Sign in</div> 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </script>
+
+    <div class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Components <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="alarms.htm">Alarms</a></li>
+                                <li class="active"><a href="relays.htm">Relays</a></li>
+                                <li><a href="buttons.htm">Buttons</a></li>
+                                <li><a href="motion.htm">Motion sensors</a></li>
+                                <li><a href="sound.htm">Sound sensors</a></li>
+                                <li><a href="modes.htm">Modes</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="configure.htm">Configure</a></li>
+                        <li><a href="manage.htm">Manage</a></li>
+                        <li><a href="rules.htm">Rules</a></li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Configurations 
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" id="loadFromLocalFile">Load From Local File</a></li>
+                                <li><a href="#" id="saveConfigurations">Save Config Locally</a></li>
+                                <li><a href="#" id="uploadConfigurations">Upload Config To CU</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
+        <div id="loginBox"></div>
+
+        <div class="jumbotron">
+            <h2 class="text-center">Relay</h2>
+
+            <span>Name: </span>
+            <input class="form-control" id="nameInput" type="text" maxlength="30" data-bind='value:relayNameToAdd, valueUpdate: "afterkeydown"'>
+            <span>Input pin: </span>
+            <input class="form-control" type="number" onkeypress="validatePin(event)" data-bind='value:relayInputPinToAdd, valueUpdate: "afterkeydown"'>
+
+            <div class="text-center vertical-space">
+                <button type="submit" data-bind="click: addItem, enable: relayNameToAdd().length > 0 && relayInputPinToAdd() > 0 ">Add relay</button>
+            </div>
+
+        </div>
+
+        <div data-bind="template: { name: 'relaysTemplate', foreach: relays }"></div>
+
+        <script id='relaysTemplate' type="text/html">
+            <div class="jumbotron">
+                <div class="btn btn-danger pull-right" data-bind="click: $root.removeItem">X</div>
+                <h2 class="text-center">Relay</h2>
+                <span>Name: </span>
+                <input class="form-control" type="text" data-bind="value: rn">
+                <span>Input pin: </span>
+                <input class="form-control" type="number" data-bind="value: p">
+            </div>
+        </script>
+
+    </div>
+    <!-- /container -->
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+<script type="text/javascript">
+    function viewModel() {
+        self = this;
+        this.relayInputPinToAdd = numericObservable("");
+        this.relayNameToAdd = ko.observable("");
+        this.relays = ko.observableArray([]);
+        this.rules = ko.observableArray([]);
+
+        this.addItem = function () {
+            if ((this.relayNameToAdd() != "")) {
+                this.relays.push(new relay(this.relayNameToAdd(), this.relayInputPinToAdd(), getId()));
+                saveChanges();
+            }
+            this.relayNameToAdd(""); // Clear the text boxes
+            this.relayInputPinToAdd("");
+        };
+
+        this.removeItem = function (relay) {
+            var rules = self.rules();
+            if (rules != null) {
+                for (var i = 0; i < rules.length; i++) {
+                    if (getObjectFromId(rules[i].c, relay.id) || getObjectFromId(rules[i].a, relay.id))
+                    {
+                        alert("The Relay is used in a rule.");
+                        return;
+                    }
+                };
+
+                self.relays.remove(relay);
+                //decreaseId();
+
+                saveChanges();
+                return;
+            }
+
+            self.relays.remove(relay);
+            //decreaseId();
+
+            saveChanges();
+        };
+    };
+
+    ko.applyBindings(new viewModel());
+
+    function saveChanges() {
+        saveJson(relaysStorageName, self.relays);
+    }
+
+    $(document).ready(function () {
+        var user = readCookie("login");
+
+        if (user == null) {
+            var loginBox = document.getElementById('loginBox');
+            loginBox.classList.add("overlay");
+            loginBox.innerHTML += $('#loginHtml').html();
+        }
+    });
+</script>
+</html>
+
+
+
+

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <style type="text/css">
+    @media (min-width: 768px) {
+        .navbar .navbar-nav {
+            display: inline-block;
+            float: none;
+            vertical-align: top;
+        }
+
+        .navbar .navbar-collapse {
+            text-align: center;
+        }
+    }
+        .vertical-space {
+            margin-top: 8px;
+        }
+
+    </style>
+
+    <title>Motion sensors</title>
+</head>
+
+
+<body>
+<input id="upload" style="display:none;" type="file"/>
+    <div class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Components <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="alarms.htm">Alarms</a></li>
+                                <li><a href="relays.htm">Relays</a></li>
+                                <li><a href="buttons.htm">Buttons</a></li>
+                                <li class="active"><a href="motion.htm">Motion sensors</a></li>
+                                <li><a href="sound.htm">Sound sensors</a></li>
+                                <li><a href="modes.htm">Modes</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="configure.htm">Configure</a></li>
+                        <li><a href="manage.htm">Manage</a></li>
+                        <li><a href="rules.htm">Rules</a></li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Configurations <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" id="loadFromLocalFile">Load From Local File</a></li>
+                                <li><a href="#" id="saveConfigurations">Save Config Locally</a></li>
+                                <li><a href="#" id="uploadConfigurations">Upload Config To CU</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
+        <div class="jumbotron">
+            <h2 class="text-center">Motion Sensor</h2>
+
+            <span>Name: </span>
+            <input type="text" class="form-control" maxlength="30" data-bind='value:motionNameToAdd, valueUpdate: "afterkeydown"'>
+            <span>Input pin: </span>
+            <input type="number" onkeypress="validatePin(event)" class="form-control" data-bind='value:motionInputPinToAdd, valueUpdate: "afterkeydown"'>
+
+            <div class="vertical-space text-center">
+                <button type="submit" data-bind="click: addMotionSensor, enable: motionNameToAdd().length > 0 && motionInputPinToAdd() > 0 ">Add Motion sensor</button>
+            </div>
+
+        </div>
+        <!-- /jumbotron  -->
+
+        <div data-bind="template: { name: 'motionSensorTemplate', foreach: motionSensors }"></div>
+
+        <script id='motionSensorTemplate' type="text/html">
+            <div class="jumbotron">
+                <div class="btn btn-danger pull-right" data-bind="click: $root.removeMotionSensor">X</div>
+                <h2 class="text-center">Motion sensor</h2>
+
+                <span>Name: </span>
+                <input type="text" class="form-control" data-bind='value: msn, valueUpdate: "afterkeydown"'>
+                <span>Input pin: </span>
+                <input type="number" onkeypress="validatePin(event)" class="form-control" data-bind='value: p, valueUpdate: "afterkeydown"'>
+            </div>
+    </div>
+    </script>
+
+  </div>
+    <!-- /container -->
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+<script type="text/javascript">
+    function viewModel() {
+        self = this;
+        this.motionInputPinToAdd = numericObservable("");
+        this.motionNameToAdd = ko.observable("");
+        this.motionSensors = ko.observableArray([]);
+        this.rules = ko.observableArray([]);
+        
+        this.addMotionSensor = function () {
+            if (this.motionNameToAdd() != "") {
+                this.motionSensors.push(new motionSensor(this.motionNameToAdd(), this.motionInputPinToAdd(), getId()));
+                this.motionNameToAdd(""); // Clear the text boxes
+                this.motionInputPinToAdd("");
+                saveChanges();
+            }
+        };
+
+        this.removeMotionSensor = function (motionSensor) {
+            var rules = self.rules();
+            if (rules != null) {
+                for (var i = 0; i < rules.length; i++) {
+                    if (rules[i].e.id == motionSensor.id)
+                    {
+                        alert("The Motion Sensor is used in a rule.");
+                        return;
+                    }
+                };
+                
+                self.motionSensors.remove(motionSensor);
+                //decreaseId(); 
+
+                saveChanges();
+                return;
+            }
+
+            self.motionSensors.remove(motionSensor);
+            //decreaseId();
+
+            saveChanges();
+        };
+    };
+
+    ko.applyBindings(new viewModel());
+
+    function saveChanges() {
+        saveJson(motionSensorsStorageName, self.motionSensors);
+    };
+</script>
+</html>
+
+
+
+
+

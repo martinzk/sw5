@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <style type="text/css">
+    @media (min-width: 768px) {
+        .navbar .navbar-nav {
+            display: inline-block;
+            float: none;
+            vertical-align: top;
+        }
+
+        .navbar .navbar-collapse {
+            text-align: center;
+        }
+    }
+        .right-padding {
+            padding-right: 10px;
+        }
+
+        .defaultButton {
+            color: #333;
+            background-color: #fff;
+            border-color: #ccc;
+        }
+
+        .onToggled {
+            background-color: #5cb85c;
+            color: white;
+        }
+
+            .onToggled:focus {
+                color: white;
+            }
+
+            .onToggled:hover {
+                color: white;
+            }
+
+        .offToggled {
+            background-color: #d9534f;
+            color: white;
+        }
+
+            .offToggled:focus {
+                color: white;
+            }
+
+            .offToggled:hover {
+                color: white;
+            }
+
+        .vertical-space {
+            margin-top: 8px;
+        }
+
+        .double-vertical-space {
+            margin-top: 16px;
+        }
+
+
+        ul.dropdown-menu-form {
+            padding: 5px 30px 0;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        .rule-item {
+            width: 100px;
+        }
+
+        .horizontal-display {
+        }
+
+        .item-horizontal {
+            display: inline-block;
+        }
+
+        .rule-padding {
+            padding-right: 10px;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+            .dropdown-submenu > .dropdown-menu {
+                top: 0%;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+                -webkit-border-radius: 0 6px 6px 6px;
+                -moz-border-radius: 0 6px 6px;
+                border-radius: 0 6px 6px 6px;
+            }
+
+            .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu > a:after {
+                display: block;
+                content: " ";
+                float: right;
+                width: 0;
+                height: 0;
+                border-color: transparent;
+                border-style: solid;
+                border-width: 5px 0 5px 5px;
+                border-left-color: #ccc;
+                margin-top: 5px;
+                margin-right: -10px;
+            }
+
+            .dropdown-submenu:hover > a:after {
+                border-left-color: #fff;
+            }
+
+            .dropdown-submenu.pull-left {
+                float: none;
+            }
+
+                .dropdown-submenu.pull-left > .dropdown-menu {
+                    left: -100%;
+                    margin-left: 10px;
+                    -webkit-border-radius: 6px 0 6px 6px;
+                    -moz-border-radius: 6px 0 6px 6px;
+                    border-radius: 6px 0 6px 6px;
+                }
+    </style>
+
+    <title>Rules</title>
+
+</head>
+
+<body>
+<input id="upload" style="display:none;" type="file"/>
+    <div class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Components <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="alarms.htm">Alarms</a></li>
+                                <li><a href="relays.htm">Relays</a></li>
+                                <li><a href="buttons.htm">Buttons</a></li>
+                                <li><a href="motion.htm">Motion sensors</a></li>
+                                <li><a href="sound.htm">Sound sensors</a></li>
+                                <li><a href="modes.htm">Modes</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="configure.htm">Configure</a></li>
+                        <li><a href="manage.htm">Manage</a></li>
+                        <li class="active"><a href="rules.htm">Rules</a></li>
+
+                                               <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Configurations <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" id="loadFromLocalFile">Load From Local File</a></li>
+                                <li><a href="#" id="saveConfigurations">Save Config Locally</a></li>
+                                <li><a href="#" id="uploadConfigurations">Upload Config To CU</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <h2 class="text-center">Rules</h2>
+
+        <div class="horizontal-display">
+            <div class="list-group text-center">
+                <div class="list-group-item">
+                    <div class="item-horizontal">
+                        <span>if</span>
+                        <span class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle rule-item" data-toggle="dropdown">
+                                Events <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Button</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: buttons">
+                                        <li>
+                                            <div style="width: 250px" class="btn-group btn-group-xs checkbox">
+                                                <span id="stateName" class="pull-left right-padding" data-bind="text: bn"></span>
+                                                <button class="eventButton btn btn-xs btn-default" data-bind="click: addSinglePushEvent">Single</button>
+                                                <button class="eventButton btn btn-xs btn-default" data-bind="click: addDoublePushEvent">Double</button>
+                                                <button class="eventButton btn btn-xs btn-default" data-bind="click: addLongPushEvent">Long</button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Motion sensor</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: motionSensors">
+                                        <li>
+                                            <div style="width: 280px" class="btn-group btn-group-xs checkbox">
+                                                <span id="Span1" class="pull-left right-padding" data-bind="text: msn"></span>
+                                                <button class="eventButton motionButton btn btn-xs btn-default" data-bind="click: addMotionEvent">Motion registered</button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Sound sensor</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach:
+                                    soundSensors">
+                                        <li>
+                                            <div style="width: 280px" class="btn-group btn-group-xs checkbox">
+                                                <span id="Span1" class="pull-left right-padding" data-bind="text: sn"></span>
+                                                <button class="eventButton soundButton btn btn-xs btn-default" data-bind="click: addSoundEvent">Double clap</button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <div class="input-group" style="margin-left: 15px; margin-right: 10px; width: 200px;">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default eventButton form-control" id="clockButton" type="button" onclick="addClockEvent()">Clock event</button>
+                                        </span>
+                                        <input type="text" id="timeInput" class="form-control" placeholder="hh:mm">
+                                    </div>
+                                </li>
+                            </ul>
+                        </span>
+                    </div>
+                    <div class="item-horizontal">
+                        <span>when</span>
+                        <span class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle rule-item" data-toggle="dropdown">
+                                Conditions <span class="caret"></span>
+                            </button>
+                            <ul id="Ul1" class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Alarm</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: alarms">
+                                        <li>
+                                            <div style="width: 200px" class="btn-group btn-group-xs checkbox">
+                                                <label>
+                                                    <input class="displayToggleButtons" type="checkbox" data-bind="click: setConditionProperty">
+                                                    <span id="Span5" data-bind="text: an">
+                                                    </span>                                                    
+                                                </label>
+                                                <div class="level" style="display: none">
+                                                    <label style="width: 60px;">Level</label>
+                                                    <input class="alarmLevel" style="width: 35px;" type="number" in="1" max="5" min="0" data-bind="attr: {id: 'condition_alarm_' + id}">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Mode</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: modes">
+                                        <li>
+                                             <div style="width: 200px" class="btn-group btn-group-xs checkbox">
+                                                <label>
+                                                    <input class="displayToggleButtons" type="checkbox" data-bind="click: setConditionProperty">
+                                                    <span id="Span5" data-bind="text: mn">
+                                                    </span>
+                                                    <button class="onButton btn btn-xs defaultButton" style="display: none" data-bind="click: addConditionOnToObject">ON</button>
+                                                    <button class="offButton btn btn-xs defaultButton" style="display: none" data-bind="click: addConditionOffToObject">OFF</button>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Light</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: relays">
+                                        <li>
+                                            <div style="width: 200px" class="btn-group btn-group-xs checkbox">
+                                                <label>
+                                                    <input class="displayToggleButtons" type="checkbox" data-bind="click: setConditionProperty">
+                                                    <span id="Span5" data-bind="text: rn">
+                                                    </span>
+                                                    <button class="onButton btn btn-xs defaultButton" style="display: none" data-bind="click: addConditionOnToObject">ON</button>
+                                                    <button class="offButton btn btn-xs defaultButton" style="display: none" data-bind="click: addConditionOffToObject">OFF</button>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </span>
+                    </div>
+
+                    <div class="item-horizontal">
+                        <span>then</span>
+                        <span class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle rule-item" data-toggle="dropdown">
+                                Actions <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Alarm</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: alarms">
+                                        <li>
+                                            <div style="width: 200px" class="btn-group btn-group-xs checkbox">
+                                                <label>
+                                                    <input class="displayToggleButtons" type="checkbox" data-bind="click: setActionProperty">
+                                                    <span id="Span5" data-bind="text: an"></span>
+                                                </label>
+                                            </div>
+                                            <div class="level" style="display: none">
+                                                <label style="width: 42px;">Level</label>
+                                                <input class="alarmLevel" data-bind="attr: {id: 'action_alarm_' + id}" style="width: 35px;" type="number" in="1" max="5" min="0">
+                                            </div>
+                                            <div class="waitTime" style="display: none">
+                                                <label style="width: 25px; margin-top: 10px;">in</label>
+                                                H:
+                                                <input data-bind="value: waitHours" style="width: 35px;" type="number" in="1" max="15" min="0">
+                                                M:
+                                                <input data-bind="value: waitMinutes" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                                S:
+                                                <input data-bind="value: waitSeconds" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                            </div>
+                                            <div class="durationTime" style="display: none">
+                                                <label style="width: 25px;">for</label>
+                                                H:
+                                                <input data-bind="value: durationHours" style="width: 35px;" type="number" in="1" max="15" min="0">
+                                                M:
+                                                <input data-bind="value: durationMinutes" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                                S:
+                                                <input data-bind="value: durationSeconds" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Mode</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: modes">
+                                        <li>
+                                            <div style="width: 200px" class="btn-group btn-group-xs checkbox">
+                                                <label>
+                                                    <input class="displayToggleButtons" type="checkbox" data-bind="click: setActionProperty">
+                                                    <span id="Span5" data-bind="text: mn">
+                                                    </span>
+                                                    <button class="onButton btn btn-xs defaultButton" style="display: none" data-bind="click: addActionOnToObject">ON</button>
+                                                    <button class="offButton btn btn-xs defaultButton" style="display: none" data-bind="click: addActionOffToObject">OFF</button>
+                                                </label>
+                                            </div>
+                                            <div class="waitTime" style="display: none">
+                                                <label style="width: 25px; margin-top: 10px;">in</label>
+                                                H:
+                                                <input data-bind="value: waitHours" style="width: 35px;" type="number" in="1" max="15" min="0">
+                                                M:
+                                                <input data-bind="value: waitMinutes" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                                S:
+                                                <input data-bind="value: waitSeconds" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                            </div>
+                                            <div class="durationTime" style="display: none">
+                                                <label style="width: 25px;">for</label>
+                                                H:
+                                                <input data-bind="value: durationHours" style="width: 35px;" type="number" in="1" max="15" min="0">
+                                                M:
+                                                <input data-bind="value: durationMinutes" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                                S:
+                                                <input data-bind="value: durationSeconds" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Light</a>
+                                    <ul class="dropdown-menu dropdown-menu-form" role="menu" data-bind="foreach: relays">
+                                        <li>
+                                            <div style="width: 200px" class="btn-group btn-group-xs checkbox">
+                                                <label>
+                                                    <input class="displayToggleButtons" type="checkbox" data-bind="click: setActionProperty">
+                                                    <span id="Span5" data-bind="text: rn">
+                                                    </span>
+                                                    <button class="onButton btn btn-xs defaultButton" style="display: none" data-bind="click: addActionOnToObject">ON</button>
+                                                    <button class="offButton btn btn-xs defaultButton" style="display: none" data-bind="click: addActionOffToObject">OFF</button>
+                                                </label>
+                                            </div>
+                                            <div class="waitTime" style="display: none">
+                                                <label style="width: 25px; margin-top: 10px;">in</label>
+                                                H:
+                                                <input data-bind="value: waitHours" style="width: 35px;" type="number" in="1" max="15" min="0">
+                                                M:
+                                                <input data-bind="value: waitMinutes" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                                S:
+                                                <input data-bind="value: waitSeconds" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                            </div>
+                                            <div class="durationTime" style="display: none">
+                                                <label style="width: 25px;">for</label>
+                                                H:
+                                                <input data-bind="value: durationHours" style="width: 35px;" type="number" in="1" max="15" min="0">
+                                                M:
+                                                <input data-bind="value: durationMinutes" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                                S:
+                                                <input data-bind="value: durationSeconds" style="width: 35px;" type="number" in="1" max="59" min="0">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="vertical-space text-center">
+            <button type="submit" data-bind="click: addRule">Add rule</button>
+        </div>
+
+        <div data-bind="template: { name: 'rulesTemplate', foreach: rules }"></div>
+
+        <script id='rulesTemplate' type="text/html">
+            <li class="list-group-item text-center double-vertical-space">
+                <span data-bind="text: e.eventString"></span>
+                <div class="item-horizontal">
+                    <div class="dropdown">
+                        <button style="margin-left: 10px;" class="btn btn-default dropdown-toggle" type="button" id="ruleConditionsDropDown" data-toggle="dropdown">
+                            Conditions
+                        <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="ruleConditionsDropDown" data-bind="foreach: c">
+                            <li>
+                                <div style="width: 250px" class="btn-group btn-group-xs">
+                                        <span class="pull-left">
+                                        <span style="margin-left: 10px; width: 100px" data-bind="text: cn"></span>
+                                        <span style="margin-left: 10px;">State = </span>
+                                        <span style="margin-left: 5px;" data-bind="text: s"></span>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="item-horizontal">
+                    <div class="dropdown">
+                        <button style="margin-left: 10px;" class="btn btn-default dropdown-toggle" type="button" id="ruleActionsDropDown" data-toggle="dropdown">
+                            Actions
+                        <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="ruleConditionsDropDown" data-bind="foreach: a">
+                            <li>
+                                <div style="width: 400px" class="btn-group btn-group-xs">
+                                    <span class="pull-left">
+                                        <span style="margin-left: 10px; width: 100px" data-bind="text: an"></span>
+                                        <span style="margin-left: 10px;">State = </span>
+                                        <span style="margin-left: 5px;" data-bind="text: s"></span>
+                                        <span style="margin-left: 10px;">In: </span>
+                                        <span style="margin-left: 5px;" data-bind="text: w"></span>
+                                        <span style="margin-left: 10px;">For: </span>
+                                        <span data-bind="if: d == 0">
+                                            <span style="margin-left: 5px;">∞</span>
+                                        </span>
+                                        <span data-bind="if: d != 0">
+                                            <span style="margin-left: 5px;" data-bind="text: d"></span>s
+                                        </span>
+
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <span class="pull-right">
+                    <div class="btn btn-xs btn-danger" data-bind="click: removeRule">X</div>
+                </span>
+            </li>
+        </script>
+    </div>
+    <!-- /container -->
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+<script type="text/javascript">
+    function viewModel() {
+        self = this;
+        this.rules = ko.observableArray([]);
+
+        //Actions and conditions
+        this.modes = ko.observableArray([]);
+        this.relays = ko.observableArray([]);
+        this.alarms = ko.observableArray([]);
+
+        //Events
+        this.buttons = ko.observableArray([]);
+        this.motionSensors = ko.observableArray([]);
+        this.soundSensors = ko.observableArray([]);
+
+        this.eventToAdd = null;
+        this.lastEventClicked = null;
+
+        this.addRule = function () {
+
+            var conditions = [];
+            var actions = [];
+
+            for (var i = 0; i < self.modes().length; i++) {
+                var mode = self.modes()[i];
+  
+                if (mode.isCondition && mode.cs != -1) {
+                    conditions.push(new condition(mode.mn, mode.cs, mode.id));
+                }
+                if (mode.isAction && mode.as != -1) {
+                    actions.push(new action(mode.mn, mode.as,
+                    toSeconds(mode.waitHours, mode.waitMinutes, mode.waitSeconds),
+                    toSeconds(mode.durationHours, mode.durationMinutes, mode.durationSeconds), 
+                    mode.id));
+                }
+            };
+
+            for (var i = 0; i < self.alarms().length; i++) {
+                var alarm = self.alarms()[i];
+
+                alarm.as = parseInt($("#action_alarm_" + alarm.id).val());
+                alarm.cs = parseInt($("#condition_alarm_" + alarm.id).val());
+
+                if (alarm.isCondition && alarm.cs != -1) {
+                    conditions.push(new condition(alarm.an, alarm.cs, alarm.id));
+                }
+                if (alarm.isAction && alarm.as != -1) {
+                    actions.push(new action(alarm.an, alarm.as,
+                    toSeconds(alarm.waitHours, alarm.waitMinutes, alarm.waitSeconds),
+                    toSeconds(alarm.durationHours, alarm.durationMinutes, alarm.durationSeconds), 
+                    alarm.id));
+                }
+            };
+
+            for (var i = 0; i < self.relays().length; i++) {
+                var relay = self.relays()[i];
+
+                if (relay.isCondition && relay.cs != -1) {
+                    conditions.push(new condition(relay.rn, relay.cs, relay.id));
+                }
+                if (relay.isAction && relay.as != -1) {
+
+                    actions.push(new action(relay.rn, relay.as,
+                    toSeconds(relay.waitHours, relay.waitMinutes, relay.waitSeconds),
+                    toSeconds(relay.durationHours, relay.durationMinutes, relay.durationSeconds), 
+                    relay.id));
+                }
+            };
+
+            if (self.eventToAdd != null && actions.length > 0) {
+                self.rules.push(new rule(self.eventToAdd, conditions, actions));
+                resetUI();
+                resetConditionsAndActions();
+                saveChanges();
+            }
+            else {
+                alert("Please select event, conditions and actions.")
+            }
+        };
+    };
+
+    ko.applyBindings(new viewModel());
+
+    function saveChanges() {
+        saveJson(rulesStorageName, self.rules);
+    };
+</script>
+</html>

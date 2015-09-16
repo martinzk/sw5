@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <style type="text/css">
+    @media (min-width: 768px) {
+        .navbar .navbar-nav {
+            display: inline-block;
+            float: none;
+            vertical-align: top;
+        }
+
+        .navbar .navbar-collapse {
+            text-align: center;
+        }
+    }
+        .vertical-space {
+            margin-top: 8px;
+        }
+
+        .defaultButton {
+            color:#333;background-color:#fff;border-color:#ccc
+        }
+
+        .onToggled {
+            background-color: #5cb85c;
+            color:white;
+        }
+
+        .onToggled:focus {
+            color: white;
+        }
+
+        .onToggled:hover {
+            color: white;
+        }
+
+        .offToggled {
+            background-color: #d9534f;
+            color:white;
+        }
+
+        .offToggled:focus {
+            color: white;
+        }
+
+        .offToggled:hover {
+            color: white;
+        }
+    </style>
+
+    <title>Manage</title>
+
+</head>
+
+<body>
+<input id="upload" style="display:none;" type="file"/>
+    <div class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Components <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="alarms.htm">Alarms</a></li>
+                                <li><a href="relays.htm">Relays</a></li>
+                                <li><a href="buttons.htm">Buttons</a></li>
+                                <li><a href="motion.htm">Motion sensors</a></li>
+                                <li><a href="sound.htm">Sound sensors</a></li>
+                                <li><a href="modes.htm">Modes</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="configure.htm">Configure</a></li>
+                        <li class="active"><a href="manage.htm">Manage</a></li>
+                        <li><a href="rules.htm">Rules</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Configurations 
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" id="loadFromLocalFile">Load From Local File</a></li>
+                                <li><a href="#" id="saveConfigurations">Save Config Locally</a></li>
+                                <li><a href="#" id="uploadConfigurations">Upload Config To CU</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
+        <h2 class="text-center">Light</h2>
+
+        <ul class="list-group">
+
+            <div data-bind="template: { name: 'relaysTemplate', foreach: $root.relays }"></div>
+
+            <script id='relaysTemplate' type="text/html">
+                <li class="list-group-item" data-bind="attr: {id: 'item_' + id}">
+                <span data-bind="text: rn"></span>
+                    <span class="pull-right btn-group btn-group-xs btn-toggle">
+                        <button class="btn btn-xs" data-bind="click:$root.switchState">
+                        Switch state</button>
+                        <button class="onButton btn btn-xs defaultButton" data-bind="click:$root.turnOn">ON</button>
+                        <button class="offButton btn btn-xs defaultButton" data-bind="click:$root.turnOff">OFF</button>
+                    </span>
+                </li>
+            </script>
+
+        </ul>
+
+        <h2 class="text-center">Modes</h2>
+
+        <ul class="list-group">
+
+            <div data-bind="template: { name: 'modesTemplate', foreach: $root.modes }"></div>
+
+            <script id='modesTemplate' type="text/html">
+                <li class="list-group-item" data-bind="attr: {id: 'item_' + id}">
+                <span data-bind="text: mn"></span>
+                    <span class="pull-right btn-group btn-group-xs btn-toggle">
+                        <button class="onButton btn btn-xs defaultButton" data-bind="click:$root.turnOn">ON</button>
+                        <button class="offButton btn btn-xs defaultButton" data-bind="click:$root.turnOff">OFF</button>
+                    </span>
+                </li>
+            </script>
+        </ul>
+
+        <h2 class="text-center">Alarms</h2>
+
+        <ul class="list-group">
+
+            <div data-bind="template: { name: 'alarmsTemplate', foreach: $root.alarms }"></div>
+
+            <script id='alarmsTemplate' type="text/html">
+                <li class="list-group-item" data-bind="attr: {id: 'item_' + id}">
+					<span data-bind="text: an"></span> 						
+					<div class="pull-right">
+				    	<div class="input-group" style="width:100px;">
+				      		<input class="input-xs" type="number" style="text-align: center; width:50px;"  max="5" min="0">
+				      		<span class="input-group-btn">
+				        		<button style="margin-left: 5px;" data-bind="click:$root.changeState" 
+				        		class="btn btn-xs btn-default" type="button">Change
+				        		</button>
+				  			</span>
+				    	</div>
+				  	</div>	
+                </li> 
+            </script>
+        </ul>
+    </div>
+    <!-- /container -->
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+<script type="text/javascript">
+
+    function viewModel() {
+        self = this;
+        this.relays = ko.observableArray([]);
+        this.modes = ko.observableArray([]);
+        this.alarms = ko.observableArray([]);
+        this.rules = null;
+
+        this.turnOn = function (object) {
+            var domObject = getDomObject(object);
+
+            if (domObject.find('.onButton').hasClass('onToggled'))
+                return;
+
+            var config = getConfig();  
+            $.ajax({
+                type: 'GET',
+                url: "http://" + config.ipAddress + "/ChangeState" + "?id=" + object.id + "&s=1",
+                async: true,
+            });
+        };
+
+        this.turnOff = function (object) {
+            var domObject = getDomObject(object);
+
+            if (domObject.find('.offButton').hasClass('offToggled'))
+                return;
+
+            var config = getConfig();  
+
+            $.ajax({
+                type: 'GET',
+                url: "http://" + config.ipAddress + "/ChangeState" + "?id=" + object.id + "&s=0",
+                async: true,
+            });
+        };
+
+        this.switchState = function (object) {
+            var config = getConfig();  
+
+            $.ajax({
+                type: 'GET',
+                url: "http://" + config.ipAddress + "/SwitchState" + "?id=" + object.id,
+                async: true,
+            });
+        };
+
+        this.changeState = function (object) {
+            var domObject = getDomObject(object);
+        	var state = domObject.find("input").val();
+            var config = getConfig();  
+
+            $.ajax({
+                type: 'GET',
+                url: "http://" + config.ipAddress + "/ChangeState" + "?id=" + object.id + "&s=" + state,
+                async: true,
+            });
+        };
+    };
+
+    ko.applyBindings(new viewModel());
+
+    function updateStatesFromCU(manageData) {
+        if (manageData != null)
+        {
+            for (var i = 0; i < manageData.length; i++) {
+                var object = getDomObject(manageData[i]);
+
+                if (manageData[i].s == 1)
+                {
+                    var on = object.find('.onButton');
+                    var off = object.find(".offButton");
+
+                    on.addClass("onToggled");
+
+                    if (off.hasClass("offToggled") == true) {
+                        off.removeClass("offToggled");
+                    }
+                }
+                else if(manageData[i].s == 0)
+                {
+                    var off = object.find(".offButton");
+                    var on = object.find(".onButton");
+
+                    off.addClass("offToggled");
+
+                    if (on.hasClass("onToggled") == true) {
+                        on.removeClass("onToggled");
+                    }
+                }
+            };           
+        };
+    };
+
+    function getManageData()
+    {
+        var config = getConfig();  
+        var jqxhr = $.getJSON("http://" + config.ipAddress + "/ManageData").done(function(response) 
+        {
+            updateStatesFromCU(response);
+        });
+    }
+
+    $(document).ready(function () {
+        getManageData();
+    });
+
+   setInterval(getManageData, 500);
+</script>
+</html>
+ 
+
+
+
